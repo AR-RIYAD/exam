@@ -1,0 +1,696 @@
+1) bisection method
+
+from tabulate import tabulate
+import numpy as np
+import matplotlib.pyplot as plt
+
+def func(x):
+    return x**2 - 3
+
+def calculation(l, u, limit):
+    if l >= u or func(l) * func(u) >= 0:
+        print("No roots exist within the given interval")
+        return
+
+    count = 1
+    result_list = []
+    while count <= limit:
+        mid = (l + u) / 2
+        fl = func(l)
+        fu= func(u)
+        fm = func(mid)
+        result_list.append([l, u, mid, fl, fu, fm])
+        if func(mid) == 0:
+            return mid
+        elif func(l) * func(mid) < 0:
+            u = mid
+        else:
+            l = mid
+        count += 1
+
+    header = ["a", "b", "mid", "f(a)", "f(b)", "f(mid)"]
+    print(tabulate(result_list, headers=header, tablefmt="pretty"))
+
+    # Plotting the function
+    x_values = np.linspace(l - 1, u + 1, 100)
+    y_values = func(x_values)
+    
+    plt.plot(x_values, y_values, label='f(x) = x^2 - 3')
+    plt.axhline(0, color='black', linestyle='--', linewidth=0.8)
+    plt.axvline(result_list[-1][2], color='red', linestyle='--', label='Root')
+    
+    plt.scatter(result_list[-1][2], func(result_list[-1][2]), color='red')
+    
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Bisection Method')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+lower_bound = float(input("Enter the lower bound: "))
+upper_bound = float(input("Enter the upper bound: "))
+num_iterations = int(input("Enter the number of iterations: "))
+calculation(lower_bound, upper_bound, num_iterations)
+
+2) cramer's rule
+
+import numpy as np
+
+# Define the coefficient matrix and constants vector
+coefficients = np.array([
+    [1, 1, 1],
+    [2, 3, 6],
+    [1, 1, -1]
+])
+constants = np.array([8500, 38000, 0])
+
+# Calculate the determinant of the coefficient matrix
+det_coefficients = np.linalg.det(coefficients)
+
+# Replace columns with constants to find determinants for x, y, and z
+coefficients_x = coefficients.copy()
+coefficients_x[:, 0] = constants
+det_x = np.linalg.det(coefficients_x)
+
+coefficients_y = coefficients.copy()
+coefficients_y[:, 1] = constants
+det_y = np.linalg.det(coefficients_y)
+
+coefficients_z = coefficients.copy()
+coefficients_z[:, 2] = constants
+det_z = np.linalg.det(coefficients_z)
+
+# Solve for x, y, and z using Cramer's Rule
+solution_x = det_x / det_coefficients
+solution_y = det_y / det_coefficients
+solution_z = det_z / det_coefficients
+
+# Print the solutions
+print("Solution:")
+print(f"x = {solution_x}")
+print(f"y = {solution_y}")
+print(f"z = {solution_z}")
+
+
+3) gauss elimination
+
+import numpy as np
+
+# Define the coefficient matrix and constants vector
+coefficients = np.array([[10, 20], 
+                          [1, 1]])
+constants = np.array([50, 3])
+
+# Create the augmented matrix by stacking coefficients and constants
+augmented_matrix = np.column_stack((coefficients, constants))
+
+# Get the number of equations
+n = len(constants)
+
+# Perform Gauss-Jordan elimination
+for i in range(n):
+    # Normalize the pivot row
+    augmented_matrix[i, :] = augmented_matrix[i, :] / augmented_matrix[i, i]
+    
+    # Eliminate the current variable from other rows
+    for j in range(n):
+        if i != j:
+            augmented_matrix[j, :] -= augmented_matrix[j, i] * augmented_matrix[i, :]
+
+# Extract solutions from the last column of the augmented matrix
+solutions = augmented_matrix[:, -1]
+
+# Print the solutions
+print("Number of T-shirts (x):", solutions[0])
+print("Number of Hoodies (y):", solutions[1])
+
+
+4) gauss jordan
+
+import numpy as np
+
+# Coefficients matrix
+coefficients = np.array([[0.08, 0.05], 
+                          [1, 1]])
+
+# Constants vector
+constants = np.array([700, 10000])
+
+# Augmented matrix
+augmented_matrix = np.column_stack((coefficients, constants))
+
+# Get the number of equations (rows)
+rows = augmented_matrix.shape[0]
+
+# Applying Gauss-Jordan elimination
+for i in range(rows):
+    # Normalize the pivot row
+    augmented_matrix[i] = augmented_matrix[i] / augmented_matrix[i, i]
+    
+    # Eliminate other rows
+    for j in range(rows):
+        if i != j:
+            augmented_matrix[j] = augmented_matrix[j] - augmented_matrix[j, i] * augmented_matrix[i]
+
+# Extract the solution
+solution = augmented_matrix[:, -1]
+
+# Print the solution
+print("Amount invested in stocks:", solution[0])
+print("Amount invested in bonds:", solution[1])
+
+
+5) linear regression
+
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# Generate random data
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X + np.random.randn(100, 1)
+
+# Create and fit the model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+X_new = np.array([[0], [2]])
+y_pred = model.predict(X_new)
+
+# Plot the original data and regression line
+plt.scatter(X, y, label='Original data')
+plt.plot(X_new, y_pred, 'r-', label='Regression line')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+# Print model parameters
+print('Intercept (beta_0):', model.intercept_[0])
+print('Slope (beta_1):', model.coef_[0][0])
+
+
+
+6) polynomial regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# Generate synthetic data
+size = np.random.uniform(1000, 5000, 100)
+price = 100000 + 150 * size - 0.05 * (size ** 2) + np.random.normal(0, 5000, 100)
+
+# Reshape data for the model
+size = size.reshape(-1, 1)
+price = price.reshape(-1, 1)
+
+# Split the data into training and test sets
+size_train, size_test, price_train, price_test = train_test_split(size, price, test_size=0.2, random_state=42)
+
+# Polynomial regression
+degree = 2
+poly = PolynomialFeatures(degree=degree)
+size_poly = poly.fit_transform(size_train)
+
+# Fit the model
+model = LinearRegression()
+model.fit(size_poly, price_train)
+
+# Predict on training data
+price_train_pred = model.predict(size_poly)
+
+# Plotting the training data and the polynomial regression line
+plt.scatter(size_train, price_train, color='blue')
+plt.plot(size_train, price_train_pred, color='red')
+plt.title('Polynomial Regression - House Prices')
+plt.xlabel('Size')
+plt.ylabel('Price')
+plt.show()
+
+# Transform test data and predict
+size_test_poly = poly.transform(size_test)
+price_test_pred = model.predict(size_test_poly)
+
+# Calculate Mean Squared Error on test data
+mse = mean_squared_error(price_test, price_test_pred)
+print(f'Mean Squared Error on Test Data: {mse}')
+
+# Predict price for a new house size
+new_size = np.array([[3000]])
+new_size_poly = poly.transform(new_size)
+predicted_price = model.predict(new_size_poly)
+print(f'Predicted Price for a new house: {predicted_price[0][0]}')
+
+
+
+
+
+7) false position
+
+import math
+
+
+def function_to_find_root(c):
+    return (667.38 / c) * (1 - math.exp(-0.146843 * c)) - 40
+
+
+def false_position_method(func, a, b, tol=1e-6, max_iter=100):
+    # Check if the function has different signs at the endpoints
+    if func(a) * func(b) > 0:
+        raise ValueError("The function must have different signs at the interval endpoints.")
+
+    iterations = 0
+    while iterations < max_iter:
+        # Calculate the false position
+        c = (a * func(b) - b * func(a)) / (func(b) - func(a))
+
+        # Check for convergence
+        if abs(func(c)) < tol:
+            return c, iterations
+
+        # Update the interval
+        if func(c) * func(a) < 0:
+            b = c
+        else:
+            a = c
+
+        iterations += 1
+
+    raise ValueError("False-position method did not converge within the maximum number of iterations.")
+
+
+# Define the initial interval
+x1 = 12
+x2 = 16
+tolerance = 1e-6
+
+# Call the false position method
+root, iterations = false_position_method(function_to_find_root, x1, x2, tol=tolerance)
+
+# Print the results
+print(f"Approximated root: {root:.6f}")
+print(f"Iterations: {iterations}")
+
+
+
+8) euler method
+
+import matplotlib.pyplot as plt
+
+def radioactive_decay(t, y):
+    k = 0.01
+    return -k * y
+
+def euler_method(f, t0, y0, tn, h):
+    t_values = [t0]
+    y_values = [y0]
+    num_steps = int((tn - t0) / h)
+    for i in range(1, num_steps + 1):
+        t_next = t_values[i - 1] + h
+        y_next = y_values[i - 1] + h * f(t_values[i - 1], y_values[i - 1])
+        t_values.append(t_next)
+        y_values.append(y_next)
+    return t_values, y_values
+
+t0 = 0
+y0 = 1000  # Initial quantity of radioactive substance
+tn = 50    # End time
+h = 1      # Step size
+
+t_values, y_values = euler_method(radioactive_decay, t0, y0, tn, h)
+
+plt.plot(t_values, y_values, label='Radioactive Decay')
+plt.xlabel('Time (t)')
+plt.ylabel('Quantity of Substance (y)')
+plt.title('Radioactive Decay ODE Solution using Euler\'s Method')
+plt.legend()
+plt.show()
+
+
+9) simpson 1/3 
+
+import math
+
+def simpsons_one_third_rule(func, a, b, n):
+    h = (b - a) / n
+    result = func(a) + func(b)
+    
+    for i in range(1, n, 2):
+        result += 4 * func(a + i * h)
+    
+    for i in range(2, n-1, 2):
+        result += 2 * func(a + i * h)
+    
+    result *= h / 3
+    return result
+
+def exponential_function(x):
+    return math.exp(-x**2)
+
+lower_limit = -1
+upper_limit = 1
+num_intervals = 6
+
+approx_integral = simpsons_one_third_rule(exponential_function, lower_limit, upper_limit, num_intervals)
+
+print(f"Approximate integral: {approx_integral}")
+
+
+
+10) simpson 3/8
+
+def simpsons_three_eighth_rule(func, a, b, n):
+    h = (b - a) / n
+    result = func(a) + func(b)
+
+    for i in range(1, n, 3):
+        result += 3 * (func(a + i * h) + func(a + (i + 1) * h))
+
+    result *= 3 * h / 8
+    return result
+
+
+def cubic_function(x):
+    return x ** 3
+
+
+lower_limit = 1
+upper_limit = 2
+num_intervals = 3
+
+approx_integral = simpsons_three_eighth_rule(cubic_function, lower_limit, upper_limit, num_intervals)
+
+print(f"Approximate integral: {approx_integral}")
+
+
+
+
+11) milnes predictor corrector
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def milnes_method(f, y0, x0, x_end, h):
+    x = np.arange(x0, x_end + h, h)
+    y_predictor = np.zeros(len(x))
+    y_corrector = np.zeros(len(x))
+    y_predictor[0] = y0
+    y_corrector[0] = y0
+    
+    for i in range(1, len(x)):
+        y_pred = y_corrector[i - 1] + h * f(x[i - 1], y_corrector[i - 1])
+        y_corrected = y_corrector[i - 1] + (h / 4) * (3 * f(x[i], y_pred) - f(x[i - 1], y_corrector[i - 1]))
+        y_predictor[i] = y_pred
+        y_corrector[i] = y_corrected
+
+    return x, y_predictor, y_corrector
+
+def f(x, y):
+    return -y
+
+y0 = 1
+x0 = 0
+x_end = 10
+h = 0.5
+
+x, y_predictor, y_corrector = milnes_method(f, y0, x0, x_end, h)
+
+for i in range(len(x)):
+    print(f"At x = {x[i]}, Predictor y = {y_predictor[i]}, Corrector y = {y_corrector[i]}")
+
+plt.plot(x, y_predictor, label='Predictor Step')
+plt.plot(x, y_corrector, label='Corrector Step')
+plt.xlabel('Time (x)')
+plt.ylabel('Population (y)')
+plt.title('Milne\'s Predictor-Corrector Method for Exponential Decay')
+plt.legend()
+plt.show()
+
+
+
+
+
+12) picards
+
+import numpy as np
+from scipy import integrate
+import matplotlib.pyplot as plt
+
+def integral_equation(P, t, r):
+    return 10 + integrate.quad(lambda s: r * P, 0, t)[0]
+
+def picards_method(P0, t, r, iterations):
+    for i in range(iterations):
+        P1 = np.vectorize(integral_equation)(P0, t, r)
+        if np.all(np.abs(P1 - P0) < 1e-8):
+            break
+        P0 = P1
+    return P1
+
+t_values = np.linspace(0, 5, 100)
+initial_guess = 10  # Initial population
+growth_rate = 0.1
+iterations = 10
+
+population_solution = picards_method(initial_guess, t_values, growth_rate, iterations)
+
+plt.plot(t_values, population_solution, label='Approximate Population')
+plt.xlabel('Time (t)')
+plt.ylabel('Population (P)')
+plt.title("Population Growth Using Picard's Method")
+plt.legend()
+plt.show()
+
+
+
+
+13) secant method
+
+def f(x):
+    return 2 * x ** 3 - 4 * x ** 2 - 6 * x + 3
+
+def secant_method(x0, x1, iterations):
+    for i in range(iterations):
+        fx0 = f(x0)
+        fx1 = f(x1)
+        x2 = x1 - (x1 - x0) / (fx1 - fx0) * fx1
+        if abs(x2 - x1) < 1e-8:
+            break
+        x0, x1 = x1, x2
+    return x2
+
+x0 = 1
+x1 = 3
+iterations = 10
+root = secant_method(x0, x1, iterations)
+print("Root of the polynomial:", root)
+
+
+14) newton raphson
+
+import math
+
+def f(T, A, E, R, target_R):
+    return A * math.exp(-E / (R * T)) - target_R
+
+def df_dT(T, A, E, R):
+    return (A * E / (R * T ** 2)) * math.exp(-E / (R * T))
+
+def newton_raphson_method(T0, A, E, R, target_R, iterations):
+    for i in range(iterations):
+        f_T0 = f(T0, A, E, R, target_R)
+        df_dT0 = df_dT(T0, A, E, R)
+        T1 = T0 - f_T0 / df_dT0
+        if abs(T1 - T0) < 1e-8:
+            break
+        T0 = T1
+    return T1
+
+A = 2.5e8       # Pre-exponential factor
+E = 50000       # Activation energy in J/mol
+R = 8.314       # Universal gas constant in J/(mol*K)
+target_R = 1    # Target reaction rate
+T0 = 300        # Initial temperature guess in Kelvin
+iterations = 10 # Number of iterations
+
+optimal_temperature = newton_raphson_method(T0, A, E, R, target_R, iterations)
+print("Optimal temperature:", optimal_temperature, "Kelvin")
+
+
+
+
+15) simple fixed point 
+
+import matplotlib.pyplot as plt
+
+def f(V, d):
+    return V * (1 - d)
+
+def simple_fixed_point_iteration(V0, d, iterations):
+    values = [V0]
+    for i in range(iterations):
+        V1 = f(V0, d)
+        values.append(V1)
+        if abs(V1 - V0) < 1e-8:  # Check for convergence
+            break
+        V0 = V1
+    return values
+
+# Initial equipment value
+V0 = 50000
+# Depreciation rate per iteration
+d = 0.03
+# Number of iterations
+iterations = 100
+
+# Estimate equipment values over time
+estimated_values = simple_fixed_point_iteration(V0, d, iterations)
+
+# Plotting results
+plt.plot(range(len(estimated_values)), estimated_values, marker='o')
+plt.title('Depreciation Over Time')
+plt.xlabel('Time (iterations)')
+plt.ylabel('Equipment Value')
+plt.show()
+
+# Print the estimated long-term value
+print("Estimated long-term value of the equipment:", estimated_values[-1])
+
+
+
+
+*) simple fixed point convergence divergence
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+# Define two functions for g(x) to demonstrate convergence and divergence
+
+# Converging function (example: g(x) = (x + 2) / 3)
+def g_converge(x):
+    return (x + 2) / 3
+
+
+# Diverging function (example: g(x) = 2 * x + 1)
+def g_diverge(x):
+    return 2 * x + 1
+
+
+# Fixed-point iteration function
+def fixed_point_iteration(g, initial_guess, iterations, tolerance=1e-8):
+    x_values = [initial_guess]
+    for i in range(iterations):
+        x_next = g(x_values[-1])
+        x_values.append(x_next)
+
+        # Check for convergence
+        if abs(x_next - x_values[-2]) < tolerance:
+            print(f"Converged after {i + 1} iterations.")
+            break
+
+    return x_values
+
+
+# Parameters for both tests
+initial_guess = 0
+iterations = 10
+
+# Run fixed-point iteration for both functions
+converging_values = fixed_point_iteration(g_converge, initial_guess, iterations)
+diverging_values = fixed_point_iteration(g_diverge, initial_guess, iterations)
+
+# Plot the results for convergence
+plt.figure(figsize=(12, 5))
+
+# Converging plot
+plt.subplot(1, 2, 1)
+plt.plot(range(len(converging_values)), converging_values, marker='o', color='blue')
+plt.axhline(converging_values[-1], color='green', linestyle='--', label='Converged Value')
+plt.title("Convergence Example")
+plt.xlabel("Iterations")
+plt.ylabel("Value of x")
+plt.legend()
+
+# Diverging plot
+plt.subplot(1, 2, 2)
+plt.plot(range(len(diverging_values)), diverging_values, marker='o', color='red')
+plt.title("Divergence Example")
+plt.xlabel("Iterations")
+plt.ylabel("Value of x")
+
+plt.tight_layout()
+plt.show()
+
+# Print final results
+print("Converging values:", converging_values)
+print("Diverging values:", diverging_values)
+
+
+
+
+
+*) error elimination trapezoidal+simpson 
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def hybrid_smoothing(signal, alpha=0.5):
+    """
+    Apply Hybrid Smoothing using Trapezoidal and Simpson's Rules.
+
+    Parameters:
+    - signal: Input signal to be smoothed.
+    - alpha: Weight parameter for blending Trapezoidal and Simpson's Rules.
+
+    Returns:
+    - smoothed_signal: Smoothed signal.
+    """
+    n = len(signal)
+    smoothed_signal = np.zeros_like(signal)
+
+    for i in range(1, n-1, 2):
+        trapezoidal = (signal[i-1] + 4*signal[i] + signal[i+1]) / 6
+        simpsons = (signal[i-1] + 4*signal[i] + signal[i+1]) / 6
+        smoothed_signal[i] = alpha * trapezoidal + (1 - alpha) * simpsons
+
+    smoothed_signal[0] = signal[0]
+    smoothed_signal[-1] = signal[-1]
+
+    return smoothed_signal
+
+def main():
+    # Generating a sample signal
+    np.random.seed(42)
+    t = np.linspace(0, 10, 100)
+    signal = np.sin(t) + 0.2 * np.random.randn(100)  # Add some noise to the signal
+
+    # Applying Hybrid Smoothing
+    smoothed_signal = hybrid_smoothing(signal, alpha=0.7)
+
+    # Plotting the results
+    plt.figure(figsize=(10, 6))
+    plt.plot(t, signal, label='Original Signal', alpha=0.5)
+    plt.plot(t, smoothed_signal, label='Smoothed Signal', linewidth=2)
+    plt.title('Data Smoothing using Hybrid Trapezoidal and Simpson\'s Rules')
+    plt.xlabel('Time')
+    plt.ylabel('Amplitude')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+if __name__ == "__main__":
+    main()
