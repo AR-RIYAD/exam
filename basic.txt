@@ -1,0 +1,65 @@
+# Matplotlib
+import matplotlib.pyplot as plt
+
+# Basic Plotting
+plt.plot(x, y)                     # Line graph for given x and y data points
+plt.scatter(x, y)                  # Scatter plot to show individual data points
+plt.bar(x, height)                 # Bar chart with categories x and values height
+plt.hist(data, bins)               # Histogram for distribution of data with bins
+plt.pie(sizes, labels)             # Pie chart with sizes as portions and labels
+
+# Labels and Titles
+plt.xlabel('label')                # Sets label for x-axis
+plt.ylabel('label')                # Sets label for y-axis
+plt.title('title')                 # Sets title of the plot
+plt.legend()                       # Adds a legend to the plot
+
+# Axis Limits
+plt.xlim(min, max)                 # Sets limits for x-axis
+plt.ylim(min, max)                 # Sets limits for y-axis
+
+# Grid and Display
+plt.grid(True)                     # Adds a grid to the plot
+plt.show()                         # Displays the plot
+
+
+# NumPy
+import numpy as np
+
+# Array Creation
+np.array(list)                     # Creates an array from a Python list
+np.arange(start, stop, step)       # Generates range of numbers with a step
+np.linspace(start, stop, num)      # Evenly spaced values between start and stop
+np.zeros(shape)                    # Array of zeros with given shape
+np.ones(shape)                     # Array of ones with given shape
+np.eye(N)                          # Identity matrix of size N x N
+np.random.rand(shape)              # Array with random values (uniform dist.)
+np.random.randn(shape)             # Array with random values (normal dist.)
+
+# Statistical Functions
+np.mean(array)                     # Mean of array elements
+np.median(array)                   # Median of array elements
+np.std(array)                      # Standard deviation of array
+
+# Basic Operations
+np.sum(array)                      # Sum of all elements in array
+np.prod(array)                     # Product of all elements in array
+np.dot(a, b)                       # Dot product of two arrays
+
+# Array Reshaping
+np.reshape(array, new_shape)       # Reshapes array to new_shape
+np.transpose(array)                # Transposes array, swapping axes
+
+
+
+# Tabulate
+from tabulate import tabulate
+
+# Basic Table Creation
+tabulate(data, headers, tablefmt)           # Formats data with headers and style
+tabulate(data, headers="keys")              # Uses dict keys as headers
+tabulate(data, showindex="always")          # Adds index column to table
+
+# Formatting
+tabulate(data, floatfmt=".2f")              # Controls decimal places in table
+tabulate(data, headers, numalign="center")  # Aligns numbers in cells (left, center, right)
