@@ -56,7 +56,7 @@ AI Assistant integrates cutting-edge machine learning and artificial intelligenc
 <img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/2_d.png" width=30% height=30%/>
 <img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/3_d.png" width=30% height=30%/>
 <img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/home.png" width=30% height=30%/>
-<img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/6_l.png" width=30% height=30%/>
+<img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/6_d.png" width=30% height=30%/>
 <img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/7_d.png" width=30% height=30%/>
 <img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/8_d.png" width=30% height=30%/>
 <img src="https://github.com/AR-RIYAD/exam/blob/main/screenshots/3_d.png" width=30% height=30%/>
